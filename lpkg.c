@@ -1,3 +1,5 @@
+/*  $sysrecipes: lpkg.c,v 1.0 2026/11/03 14:34:10 littefly365 Exp $  */
+
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +10,10 @@
 #include <errno.h>
 
 #include "config.h"
+
+#ifndef __dead
+#define __dead	__attribute__((noreturn))
+#endif
 
 #if !HAVE_GETPROGNAME
 const char *getprogname(void) { return "lpkg"; }
@@ -32,8 +38,8 @@ enum MODE {
 	LIST
 };
 
-static void usage(void);
-static void output_version(void);
+static void __dead usage(void);
+static void __dead output_version(void);
 
 int
 main(int argc, char *argv[])
@@ -132,7 +138,7 @@ main(int argc, char *argv[])
 	return 0;
 }
 
-static void
+static void __dead
 usage(void)
 {
 	printf(	"Usage: %s [OPERATION] <PACKAGE>...\n"
@@ -152,7 +158,7 @@ usage(void)
 	exit(0);
 }
 
-static void
+static void __dead
 output_version(void)
 {
 	printf(	"%s (" PROJECT_NAME ") " PROJECT_VERSION "\n"
