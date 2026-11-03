@@ -100,7 +100,7 @@ main(int argc, char *argv[])
 		}
 
 		/*
-		 * If the operation is not successfuly pkg_add/pkg_delete already print and error message
+		 * If the operation is not successfuly pkg_add/pkg_delete already print an error message
 		*/
 
 		if (waitpid(pid, NULL, 0) < 0) {
