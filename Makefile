@@ -1,18 +1,18 @@
-PROG=lpkg
+#  $sysrecipes: Makefile,v 1.0 2026/11/03 14:34:10 littefly365 Exp $
 
-SRCS=lpkg.c
-OBJS=$(SRCS:.c=.o)
+PREFIX ?= /usr
+BINDIR ?= $(PREFIX)/bin
+RECIPEDIR ?= $(PREFIX)/sysrecipes
+SYSCONFDIR ?= /etc
 
-CPPFLAGS ?=
-CFLAGS ?=
-LDFLAGS ?=
+all:
 
-all: $(PROG)
+install: install-exec install-recipes
 
-$(PROG): $(OBJS)
-	$(CC) $? -o $@ $(LDFLAGS)
-%.o: %.c
-	$(CC) -c $(CPPFLAGS) $(CFLAGS) $< -o $@
-clean:
-	rm -rf $(PROG) $(OBJS)
-.PHONY: all clean
+install-exec: install-files
+	install -Dm 755 mkpkg $(DESTDIR)$(BINDIR)/mkpkg
+install-files:
+	install -Dm 644 mkpkg.conf $(DESTDIR)$(SYSCONFDIR)/mkpkg.conf
+install-recipes:
+	install -Dm 644 LFS $(DESTDIR)$(RECIPEDIR)/LFS
+.PHONY: all

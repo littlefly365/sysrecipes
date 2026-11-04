@@ -1,0 +1,22 @@
+#  $sysrecipes: shells/bash/5.3/LFSBUILD,v 1.0 2026/11/02 21:42:00 littefly365 Exp $
+#  Maintainer: littlefly365 <c081526@hotmail.com>
+
+pkgname=bash
+pkgver=5.3
+pkgrel=0
+pkgdesc="The GNU Bourne Again Shell"
+pkgurl="https://ftpmirror.gnu.org/bash/bash-9.12.tar.gz"
+
+arch=all
+license=GPL-3-or-later
+category=shells
+
+pkg_config_type="gnu_configure"
+configopts="--prefix=/usr --without-bash-malloc --with-installed-readline \
+            --docdir=/usr/share/doc/bash-5.3"
+
+post_install()
+{
+	ln -svf bash /usr/bin/sh
+	rm -rf /usr/share/info
+}

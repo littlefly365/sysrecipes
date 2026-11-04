@@ -1,0 +1,135 @@
+#!/bin/sh
+#  $sysrecipes: mkpkg,v 1.0 2026/11/03 15:41:43 littefly365 Exp $
+set -e
+
+__prog_name="mkpkg"
+__prog_version="1.0"
+
+prepare() { :; }
+post_install() { :; }
+
+use_build_dir=0
+download_command="wget -4 -q"
+NPROC="$(nproc)"
+
+main()
+{
+	while [ $# -gt 0 ]; do
+		case "$1" in
+		-h|--h|--he|--hel|--help)
+			printf "%s\n\n%s\n%s\n%s\n"						\
+			"Usage: $__prog_name [OPTION] <pkgname>"				\
+			"Options:"								\
+			"  -h, --help         Display this help and exit"			\
+			"  -V, --version      Output version information and exit"
+			exit 0
+			;;
+		-V|--vers|--versi|--versio|--version)
+			printf "%s\n%s\n%s\n%s\n%s\n\n%s\n"					\
+			"$__prog_name (sysrecipes) $__prog_version"				\
+			"Copyright (C) 2026 littlefly365"					\
+			"License GPLv2: GNU GPL version 2 <https://gnu.org/licenses/gpl.html>."	\
+			"This is free software: you are free to change and redistribute it."	\
+			"There is NO WARRANTY, to the extent permitted by law."			\
+			"Written by littlefly365."
+			exit 0
+			;;
+		-*)
+			printf "$__prog_name: invalid option '$1'\n%s\n"			\
+				"Try '$__prog_name --help' for more information."
+			exit 1
+			;;
+		*)
+			break
+			;;
+		esac
+	done
+
+	if [ ! -f /etc/mkpkg.conf ]; then
+		printf >&2 "$__prog_name: /etc/mkpkg.conf: No such file or directory.\n"
+		exit 1
+	fi
+
+	. /etc/mkpkg.conf
+
+	if [ ! -f ./LFSBUILD ]; then
+		printf >&2 "$__prog_name: 'LFSBUILD' does not exist in the current directory.\n"
+		exit 1
+	fi
+
+	. ./LFSBUILD
+
+	if [ -z "${pkgname+x}" ] || [ -z "${pkgver+x}" ] || [ -z "${pkgver+x}" ] || [ -z "${pkgurl+x}" ]; then
+		printf >&2 "$__prog_name: the LFSBUILD does not have the enough information.\n"
+		exit 1
+	fi
+
+	if [ "$HOST_ARCH" != "$arch" ] && [ "$arch" != "all" ]; then
+		printf >&2 "$__prog_name: This recipe is not for your architecture.\n"
+		exit 1
+	fi
+
+	if [ "$pkgname" = "gcc" ] || [ "$pkgname" = "binutils" ]; then
+		use_build_dir=1
+	fi
+
+	printf "===> Downloading file from $pkgurl\n"
+
+	if ! $download_command "$pkgurl"; then
+		printf >&2 "FAIL: cannot download from $pkgurl.\n"
+		exit 1
+	fi
+
+	file_name="$(basename $pkgurl)"
+
+	case "$file_name" in
+		*.tar.gz)
+			dir_name="${file_name%.tar.gz}"
+		;;
+		*.tar.xz)
+			dir_name="${file_name%.tar.xz}"
+		;;
+	esac
+
+	tar xf "$file_name" && cd "$dir_name"
+
+	prepare
+
+	# CONFIGURE
+	case "$pkg_config_type" in
+		"configure"|"gnu_configure")
+			configure_file="./configure"
+
+			if [ "$use_build_dir" -ne 0 ]; then
+				configure_file="../configure"
+			fi
+
+			$configure_file $configopts
+			break
+			;;
+		*)
+			printf >&2 "$__prog_name: unknown configuration type '$pkg_config_type'.\n"
+			exit 1
+			;;
+	esac
+
+	# BUILD
+	case "$pkg_config_type" in
+		"configure"|"gnu_configure")
+			make -j$NPROC
+			break
+		;;
+	esac
+
+	# INSTALL
+	case "$pkg_config_type" in
+		"configure"|"gnu_configure")
+			make install
+			break
+		;;
+	esac
+
+	post_install
+}
+
+main $@
