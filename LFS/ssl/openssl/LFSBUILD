@@ -8,8 +8,8 @@ arch=all
 license=Apache-2.0
 maintainer=littlefly365
 
-pkg_config_type="gnu_configure"
-configure_script="Configure"
+configure_style="gnu_configure"
+configure_script="config"
 configure_args="--prefix=/usr --openssldir=/etc/ssl --libdir=lib shared szlib-dynamic"
 install_args="INSTALL_LIBS= MANSUFFIX=ssl"
 

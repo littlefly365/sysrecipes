@@ -8,12 +8,11 @@ arch=all
 license=GPL-3-or-later
 maintainer=littlefly365
 
-pkg_config_type="gnu_configure"
-configopts="--prefix=/usr --without-bash-malloc --with-installed-readline \
+configure_style="gnu_configure"
+configure_args="--prefix=/usr --without-bash-malloc --with-installed-readline \
             --docdir=/usr/share/doc/bash-5.3"
 
 post_install()
 {
 	ln -svf bash /usr/bin/sh
-	rm -rf /usr/share/info
 }

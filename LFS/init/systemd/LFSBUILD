@@ -1,0 +1,35 @@
+pkgname=systemd
+pkgver=261.2
+pkgrel=0
+pkgdesc="A system and service manager for Linux"
+pkgurl="https://github.com/systemd/systemd/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz"
+
+arch=all
+license="GPL-2-only LGPL-2.1-or-later"
+maintainer=littlefly365
+
+configure_style="meson"
+configure_args="--prefix=/usr --buildtype=release -D default-dnssec=no \
+                -D firstboot=false -D install-tests=false -D ldconfig=false \
+                -D sysusers=false -D rmpmacrosdir=no -D homed=disabled \
+                -D man=disabled -D mode=release -D pamconfdir=no \
+                -D dev-kvm-mode=0660 -D nobody-group=nogroup -D sysupdate=disabled \
+                -D ukify=disabled -D docdir=/usr/share/doc/systemd-261.2"
+
+prepare()
+{
+	sed -e 's/GROUP="render"/GROUP="video"/'	\
+	-e 's/GROUP="sgx", //'               		\
+	-i rules.d/50-udev-default.rules.in
+}
+
+post_install()
+{
+	tar xf ${CWD}/files/systemd-man-pages-261.2.tar.xz 	\
+		--no-same-owner --strip-components=1		\
+		-C /usr/share/man
+
+	systemd-machine-id-setup
+
+	systemctl preset-all
+}

@@ -8,4 +8,15 @@ arch=all
 license=GPL-2-only
 maintainer=littlefly365
 
-pkg_config_type="gmake"
+configure_style="gmake"
+
+prepare()
+{
+	patch -Np1 -i ${CWD}/patches/sysvinit-3.14-consolidated-1.patch
+}
+
+post_install()
+{
+	tar xf ${CWD}/files/lfs-bootscripts-20250827.tar.xz
+	make install -f lfs-bootscripts-20250827
+}

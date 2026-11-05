@@ -8,12 +8,11 @@ arch=all
 license=GPL-3-or-later
 maintainer=littlefly365
 
-pkg_config_type="gnu_configure"
-configopts="--prefix=/usr --with-openssl"
+configure_style="gnu_configure"
+configure_args="--prefix=/usr --with-openssl"
 
 post_install()
 {
-	rm -rf /usr/share/info
 	mv /usr/bin/chroot /usr/sbin/chroot
 	mv /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8
 	sed -i 's/"1"/"8"/' /usr/share/man/man8/chroot.8

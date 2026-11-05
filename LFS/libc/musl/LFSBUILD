@@ -8,5 +8,21 @@ arch=all
 license=MIT
 maintainer=littlefly365
 
-pkg_config_type="configure"
-configopts="--prefix=/usr --disable-gcc-wrapper"
+configure_style="gnu_configure"
+configure_args="--prefix=/usr --disable-gcc-wrapper"
+build_args="EXTRA_OBJ=\$\(srcdir\)/src/fts/fts.o"
+
+prepare()
+{
+	rm -f src/string/x86_64/memcpy.s src/string/x86_64/memmove.s
+	mkdir -p src/fts && cc -c ${CWD}/files/fts.c -o src/fts/fts.o -I${CWD}/files
+}
+
+post_install()
+{
+	ln -sf true /usr/bin/ldconfig
+	ln -sf ../lib/libc.so /usr/bin/ldd
+
+	install -Dm 644 ${CWD}/files/fts.h /usr/include/fts.h
+	install -Dm 644 ${CWD}/files/fts.3 /usr/man/man3/fts.3
+}

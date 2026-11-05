@@ -111,7 +111,7 @@ main()
 	prepare
 
 	# CONFIGURE
-	case "$pkg_config_type" in
+	case "$configure_style" in
 		"configure"|"gnu_configure")
 			if [ -z "${configure_script+x}" ]; then
 				configure_script="./configure"
@@ -128,15 +128,15 @@ main()
 			break
 			;;
 		*)
-			printf >&2 "$__prog_name: unknown configuration type '$pkg_config_type'.\n"
+			printf >&2 "$__prog_name: unknown configuration type '$configure_style'.\n"
 			exit 1
 			;;
 	esac
 
 	# BUILD
-	case "$pkg_config_type" in
+	case "$configure_style" in
 		"configure"|"gnu_configure"|"gmake")
-			make
+			make $build_args
 			break
 		;;
 	esac
@@ -144,7 +144,7 @@ main()
 	pre_install
 
 	# INSTALL
-	case "$pkg_config_type" in
+	case "$configure_style" in
 		"configure"|"gnu_configure"|"gmake")
 			make $install_args install
 			break

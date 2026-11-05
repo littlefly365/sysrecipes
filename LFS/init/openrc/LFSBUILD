@@ -1,0 +1,63 @@
+pkgname=openrc
+pkgver=0.64.1
+pkgrel=0
+pkgdesc="A dependency-based init system for Linux"
+pkgurl="https://github.com/OpenRC/openrc/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+
+arch=all
+license=BSD-2-Clause
+maintainer=littlefly365
+
+configure_style="meson"
+configure_args="--prefix=/usr --buildtype=release -D uucp_group=root -D pam=false"
+
+prepare()
+{
+	patch -Np1 -i ${CWD}/patches/openrc-0.63.3-lock-1.patch
+	sed -i '/sed -u/d' tools/meson_final.sh
+}
+
+pre_install()
+{
+	if [ -d /etc/conf.d ]; then
+		mv /etc/conf.d /etc/conf.d.tmp
+	fi
+}
+
+post_install()
+{
+	if [ -d /etc/conf.d.tmp ]; then
+		cp -R /etc/conf.d.tmp/* /etc/conf.d
+		rm -rf /etc/conf.d.tmp
+	fi
+
+	mv /usr/sbin/rc-update /usr/bin/rc-update
+
+	for i in init shutdown; do
+		ln -svf openrc-${i} /usr/sbin/${i}
+	done
+
+	for i in reboot poweroff; do
+		printf "%s\n%s" 			\
+		"#!/bin/sh"				\
+		"exec /usr/sbin/shutdown --${i} now" > /usr/sbin/${i}
+
+		chmod 755 /usr/sbin/$i
+	done
+
+	# This part is dangerous for non-LFS systems
+	rm -f /etc/runlevels/default/agetty*
+
+	for i in $(seq 1 6); do
+		ln -sf agetty /etc/init.d/agetty.tty${i}
+		rc-update add agetty.tty${i} default
+	done
+
+	for i in udevd udev-trigger; do
+		install -m 755 ${CWD}/files/udevd /etc/init.d/udevd
+		rc-update add ${i} sysinit
+	done
+
+	install -m 755 ${CWD}/files/sysklogd /etc/init.d/sysklogd
+	rc-update add sysklogd boot
+}
