@@ -84,7 +84,7 @@ main()
 		exit 1
 	fi
 
-	if [ "$pkgname" = "gcc" ] || [ "$pkgname" = "binutils" ]; then
+	if [ "$pkgname" = "gcc" ] || [ "$pkgname" = "binutils" ] || [ "$pkgname" = "glibc" ]; then
 		use_build_dir=1
 	fi
 

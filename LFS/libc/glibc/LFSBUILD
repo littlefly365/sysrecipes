@@ -9,7 +9,8 @@ license=LGPL-2.1
 maintainer=littlefly365
 
 configure_style="gnu_configure"
-configure_args="--prefix=/usr --disable-gcc-wrapper"
+configure_args="--prefix=/usr --disable-werror --disable-nscd libc_cv_slibdir=/usr/lib \
+                --enable-stack-protector=strong --enable-kernel=5.10"
 
 prepare()
 {
