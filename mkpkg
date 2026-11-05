@@ -1,11 +1,12 @@
 #!/bin/sh
-#  $sysrecipes: mkpkg,v 1.0 2026/11/03 15:41:43 littefly365 Exp $
+#  $sysrecipes: mkpkg,v 1.0 2026/11/03 15:41:43 littlefly365 Exp $
 set -e
 
 __prog_name="mkpkg"
 __prog_version="1.0"
 
 prepare() { :; }
+pre_install() { :; }
 post_install() { :; }
 
 use_build_dir=0
@@ -51,6 +52,20 @@ main()
 	fi
 
 	. /etc/mkpkg.conf
+
+	for i in $BUILDRULES; do
+		case "$i" in
+			-ssl=*)
+				SSL="${i#*=}"
+			;;
+			-init=*)
+				INIT="${i#*=}"
+			;;
+			-libc=*)
+				LIBC="${i#*=}"
+			;;
+		esac
+	done
 
 	if [ ! -f ./LFSBUILD ]; then
 		printf >&2 "$__prog_name: 'LFSBUILD' does not exist in the current directory.\n"
@@ -98,13 +113,18 @@ main()
 	# CONFIGURE
 	case "$pkg_config_type" in
 		"configure"|"gnu_configure")
-			configure_file="./configure"
-
-			if [ "$use_build_dir" -ne 0 ]; then
-				configure_file="../configure"
+			if [ -z "${configure_script+x}" ]; then
+				configure_script="./configure"
 			fi
 
-			$configure_file $configopts
+			if [ "$use_build_dir" -ne 0 ]; then
+				configure_script="../configure"
+			fi
+
+			$configure_script $configure_args
+			break
+			;;
+		"gmake")
 			break
 			;;
 		*)
@@ -115,16 +135,18 @@ main()
 
 	# BUILD
 	case "$pkg_config_type" in
-		"configure"|"gnu_configure")
-			make -j$NPROC
+		"configure"|"gnu_configure"|"gmake")
+			make
 			break
 		;;
 	esac
 
+	pre_install
+
 	# INSTALL
 	case "$pkg_config_type" in
-		"configure"|"gnu_configure")
-			make install
+		"configure"|"gnu_configure"|"gmake")
+			make $install_args install
 			break
 		;;
 	esac

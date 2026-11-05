@@ -1,15 +1,12 @@
-#  $sysrecipes: sysutils/coreutils/9.12/LFSBUILD,v 1.0 2026/11/02 14:51:00 littefly365 Exp $
-#  Maintainer: littlefly365 <c081526@hotmail.com>
-
 pkgname=coreutils
 pkgver=9.12
 pkgrel=0
 pkgdesc="The basic file, shell and text manipulation utilities"
-pkgurl="https://ftp.gnu.org/gnu/coreutils/coreutils-9.12.tar.gz"
+pkgurl="https://ftp.gnu.org/gnu/coreutils/${pkgname}-${pkgver}.tar.gz"
 
 arch=all
 license=GPL-3-or-later
-category=sysutils
+maintainer=littlefly365
 
 pkg_config_type="gnu_configure"
 configopts="--prefix=/usr --with-openssl"

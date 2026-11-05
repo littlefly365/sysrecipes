@@ -1,0 +1,12 @@
+pkgname=musl
+pkgver=1.2.6
+pkgrel=0
+pkgdesc="A lightweight, fast, simple and free implementation of the C standard library"
+pkgurl="https://musl.libc.org/releases/${pkgname}-${pkgver}.tar.gz"
+
+arch=all
+license=MIT
+maintainer=littlefly365
+
+pkg_config_type="configure"
+configopts="--prefix=/usr --disable-gcc-wrapper"

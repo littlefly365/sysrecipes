@@ -1,0 +1,20 @@
+pkgname=openssl
+pkgver=4.0.1
+pkgrel=0
+pkgdesc="Toolkit for Secure Sockets Layer and Transport Layer Security"
+pkgurl="https://github.com/openssl/openssl/releases/download/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.gz"
+
+arch=all
+license=Apache-2.0
+maintainer=littlefly365
+
+pkg_config_type="gnu_configure"
+configure_script="Configure"
+configure_args="--prefix=/usr --openssldir=/etc/ssl --libdir=lib shared szlib-dynamic"
+install_args="INSTALL_LIBS= MANSUFFIX=ssl"
+
+post_install()
+{
+	mv /usr/share/doc/openssl /usr/share/doc/openssl-4.0.1
+	cp -fr doc/* /usr/share/doc/openssl/4.0.1
+}
