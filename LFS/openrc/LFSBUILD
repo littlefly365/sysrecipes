@@ -54,7 +54,7 @@ post_install()
 	done
 
 	for i in udevd udev-trigger; do
-		install -m 755 ${CWD}/files/udevd /etc/init.d/udevd
+		install -m 755 ${CWD}/files/${i} /etc/init.d/${i}
 		rc-update add ${i} sysinit
 	done
 

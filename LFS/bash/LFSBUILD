@@ -10,7 +10,7 @@ maintainer=littlefly365
 
 configure_style="gnu_configure"
 configure_args="--prefix=/usr --without-bash-malloc --with-installed-readline \
-            --docdir=/usr/share/doc/bash-5.3"
+            --docdir=/usr/share/doc/bash-5.3 --build=${CBUILD} --host=${CHOST}"
 
 post_install()
 {

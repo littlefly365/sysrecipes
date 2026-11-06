@@ -10,4 +10,4 @@ maintainer=littlefly365
 
 configure_style="gnu_configure"
 configure_args="--prefix=/usr --sysconfdir=/etc --libdir=/usr/lib --enable-hardening \
-                --with-openssl=/etc/ssl"
+                --with-openssldir=/etc/ssl --build=${CBUILD} --host=${CHOST}"

@@ -9,7 +9,7 @@ license=GPL-3-or-later
 maintainer=littlefly365
 
 configure_style="gnu_configure"
-configure_args="--prefix=/usr --with-openssl"
+configure_args="--prefix=/usr --with-openssl --build=${CBUILD} --host=${CHOST}"
 
 post_install()
 {

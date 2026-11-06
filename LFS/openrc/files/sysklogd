@@ -1,0 +1,21 @@
+#!/sbin/openrc-run
+# Starts the sysklogd daemon.
+# Authors: Zeckma - zeckma@linuxfromscratch.com
+# Version: LFS r13.1-132-openrc
+
+command=/sbin/syslogd
+pidfile="/run/${RC_SVCNAME}.pid"
+command_background=true
+command_args="-F ${sysklogd_options}"
+
+depend() {
+  need clock hostname
+  after root
+  provide logger
+}
+
+reload() {
+  ebegin "Reloading sysklogd"
+  start-stop-daemon --signal HUP --pidfile ${pidfile}
+  eend $?
+}

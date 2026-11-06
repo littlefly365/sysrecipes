@@ -53,20 +53,6 @@ main()
 
 	. /etc/mkpkg.conf
 
-	for i in $BUILDRULES; do
-		case "$i" in
-			-ssl=*)
-				SSL="${i#*=}"
-			;;
-			-init=*)
-				INIT="${i#*=}"
-			;;
-			-libc=*)
-				LIBC="${i#*=}"
-			;;
-		esac
-	done
-
 	if [ ! -f ./LFSBUILD ]; then
 		printf >&2 "$__prog_name: 'LFSBUILD' does not exist in the current directory.\n"
 		exit 1

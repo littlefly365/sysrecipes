@@ -1,0 +1,12 @@
+pkgname=elftoolchain
+pkgver=7.0.2
+pkgrel=0
+pkgdesc="a BSD alternative for binutils"
+pkgurl="https://github.com/littlefly365/elftoolchain/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+
+arch=all
+license=BSD-2-Clause
+maintainer=littlefly365
+
+configure_style="bmake"
+build_args="WITH_TESTS=no"
