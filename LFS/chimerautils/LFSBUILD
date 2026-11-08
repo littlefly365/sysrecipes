@@ -1,0 +1,39 @@
+#
+# chimerautils requires libxo, but we don't want to have it
+# in the base system, so we build a minimal static libxo to
+# link against it
+
+#
+# Note: We're planing to create a fork or a project inspired on chimerautils based on other BSD
+# to avoid some dependencies and make the system smaller
+#
+
+pkgname=chimerautils
+pkgver=15.1.2
+pkgrel=0
+pkgdesc="Chimera Linux Userland"
+pkgurl="https://github.com/chimera-linux/chimerautils/archive/refs/tags/v${pkgver}.tar.gz"
+
+libxo_ver=2.3.0
+libxo_rel=0
+libxo_desc="A library for generating text, XML, JSON and HTML output"
+libxo_url="https://github.com/Juniper/libxo/releases/download/${libxo_ver}/libxo-${libxo_ver}.tar.gz"
+libxo_configure_args="--prefix=/usr --enable-text-only --disable-gettext --enable-static \
+                      --disable-shared --disable-libxo-options"
+
+arch=all
+license=BSD-2-Clause
+maintainer=littlefly365
+configure_style="meson"
+configure_args="--prefix=/usr --buildtype=release"
+
+prepare()
+{
+	${download_command} "${libxo_url}" && tar -xf "libxo-${libxo_ver}.tar.gz"
+	cd "libxo-${libxo_ver}" && ./configure ${libxo_configure_args}
+
+	make && make DESTDIR="${CWD}/dest" install && cd "${OLDPWD}"
+
+	export CPPFLAGS="${CPPFLAGS} -I${CWD}/dest/usr/include"
+	export LDFLAGS="${LDFLAGS} -L${CWD}/dest/usr/lib"
+}

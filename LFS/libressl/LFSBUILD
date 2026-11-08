@@ -2,7 +2,7 @@ pkgname=libressl
 pkgver=4.4.0
 pkgrel=0
 pkgdesc="A fork of OpenSSL with improved security and code quality"
-pkgurl="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${pkgname}-${pkgver}.tar.gz"
+pkgurl="https://ftp.openbsd.org/pub/OpenBSD/LibreSSL/libressl-${pkgver}.tar.gz"
 
 arch=all
 license="ISC BSD-3-Clause OpenSSL SSLeay"
@@ -10,4 +10,4 @@ maintainer=littlefly365
 
 configure_style="gnu_configure"
 configure_args="--prefix=/usr --sysconfdir=/etc --libdir=/usr/lib --enable-hardening \
-                --with-openssldir=/etc/ssl --build=${CBUILD} --host=${CHOST}"
+                --with-openssldir=/etc/ssl --host=${CHOST} --build=${CBUILD}"

@@ -1,0 +1,12 @@
+pkgname=netbsd-curses
+pkgver=11.0.1
+pkgrel=0
+pkgdesc="A port of the netbsd curses library to linux"
+pkgurl="https://github.com/littlefly365/${pkgname}/releases/download/${pkgrel}/${pkgname}-${pkgrel}.tar.gz"
+
+arch=all
+license=BSD-3-Clause
+maintainer=littlefly365
+
+configure_style="gmake"
+install_args="PREFIX=/usr"

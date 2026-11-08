@@ -1,0 +1,34 @@
+pkgname=ninja
+pkgver=1.13.2
+pkgrel=0
+pkgdesc="Small build system with a focus on speed"
+pkgurl="https://github.com/ninja-build/ninja/archive/v${pkgver}/ninja-${pkgver}.tar.gz"
+
+arch=all
+license=Apache-2.0
+maintainer=littlefly365
+
+configure_style="custom"
+configure_args="--bootstrap"
+
+prepare()
+{
+	sed -i '/int Guess/a \
+	  int   j = 0;\
+	  char* jobs = getenv( "NINJAJOBS" );\
+	  if ( jobs != NULL ) j = atoi( jobs );\
+	  if ( j > 0 ) return j;\
+	' src/ninja.cc
+}
+
+build()
+{
+	python3 configure.py ${configure_args}
+}
+
+_install()
+{
+	install -vm755 ninja /usr/bin/
+	install -vDm644 misc/bash-completion /usr/share/bash-completion/completions/ninja
+	install -vDm644 misc/zsh-completion  /usr/share/zsh/site-functions/_ninja
+}

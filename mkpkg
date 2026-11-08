@@ -6,10 +6,13 @@ __prog_name="mkpkg"
 __prog_version="1.0"
 
 prepare() { :; }
+configure() { :; }
+build() { :; }
 pre_install() { :; }
 post_install() { :; }
 
 use_build_dir=0
+CWD="$(pwd -P)"
 download_command="wget -4 -q"
 NPROC="$(nproc)"
 
@@ -70,7 +73,7 @@ main()
 		exit 1
 	fi
 
-	if [ "$pkgname" = "gcc" ] || [ "$pkgname" = "binutils" ] || [ "$pkgname" = "glibc" ]; then
+	if [ "$pkgname" = "gcc" ] || [ "$pkgname" = "binutils" ]; then
 		use_build_dir=1
 	fi
 
@@ -92,7 +95,13 @@ main()
 		;;
 	esac
 
-	tar xf "$file_name" && cd "$dir_name"
+	tar xf "$file_name"
+
+	if [ ! -d "$dir_name" ]; then
+		dir_name="${pkgname}-${pkgver}"
+	fi
+
+	cd "$dir_name"
 
 	prepare
 
@@ -104,13 +113,22 @@ main()
 			fi
 
 			if [ "$use_build_dir" -ne 0 ]; then
+				mkdir -p build && cd build
 				configure_script="../configure"
 			fi
 
 			$configure_script $configure_args
 			break
 			;;
-		"gmake")
+		"gmake"|"bmake")
+			break
+			;;
+		"custom")
+			configre
+			break
+			;;
+		"meson")
+			meson setup build $configure_args
 			break
 			;;
 		*)
@@ -125,17 +143,45 @@ main()
 			make $build_args
 			break
 		;;
+		"bmake")
+			bmake $build_args
+			break
+		;;
+		"custom")
+			build
+			break
+		;;
+		"meson")
+			ninja $build_args -C build
+			break
+		;;
 	esac
 
 	pre_install
 
 	# INSTALL
-	case "$configure_style" in
-		"configure"|"gnu_configure"|"gmake")
-			make $install_args install
-			break
-		;;
-	esac
+	if [ "$pkgname" = "linux" ]; then
+		kernel_install
+	else
+		case "$configure_style" in
+			"configure"|"gnu_configure"|"gmake")
+				make $install_args install
+				break
+			;;
+			"bmake")
+				sudo bmake $install_args install
+				break
+			;;
+			"meson")
+				ninja $install_args -C build install
+				break
+			;;
+			"custom")
+				_install
+				break
+			;;
+		esac
+	fi
 
 	post_install
 }

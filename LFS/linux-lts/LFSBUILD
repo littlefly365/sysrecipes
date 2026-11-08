@@ -1,0 +1,40 @@
+pkgname=linux
+pkgver=6.18.62
+pkgrel=0
+pkgdesc="Linux LTS (Long-Term Support) Kernel"
+pkgurl="https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${pkgver}.tar.xz"
+
+arch=all
+license=GPL-2-only
+maintainer=littlefly365
+
+configure_style="gmake"
+
+prepare()
+{
+	defconfig_path="${CWD}/files/defconfig"
+	
+	make mrproper
+	rm -f .config
+
+	if [ -f /boot/config-latest ]; then
+		config="$(realpath /boot/config-latest)"
+	else
+		config="${defconfig_path}"
+	fi
+
+	cp "${config}" . || cp ${defconfig_path} .
+	make oldefconfig
+}
+
+kernel_install()
+{
+	make modules_install
+
+	cp arch/x86/boot/bzImage "/boot/vmlinuz-${pkgver}"
+	cp System.map "/boot/System.map-${pkgver}"
+	cp -i .config "/boot/config-${pkgver}"
+	cp -r Documentation -T /usr/share/doc/linux-${pkgver}
+
+	ln -sf "/boot/config-${pkgver}" /boot/config-latest
+}

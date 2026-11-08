@@ -1,0 +1,12 @@
+pkgname=zlib-ng
+pkgver=2.3.3
+pkgrel=0
+pkgdesc="zlib replacement with optimizations for "next generation" systems."
+pkgurl="https://github.com/zlib-ng/zlib-ng/archive/refs/tags/${pkgver}.tar.gz"
+
+arch=all
+license=zlib-license
+maintainer=littlefly365
+
+configure_style="gnu_configure"
+configure_args="--prefix=/usr --zlib-compat"

@@ -1,0 +1,13 @@
+pkgname=bc-gh
+pkgver=7.0.3
+pkgrel=0
+pkgdesc="An implementation of the POSIX bc calculator with GNU extensions and dc"
+pkgurl="https://github.com/gavinhoward/bc/releases/download/${pkgver}/bc-${pkgver}.tar.gz"
+
+arch=all
+license="BSD-2-Clause"
+maintainer=littlefly365
+
+configure_style="gnu_configure"
+configure_script="configure.sh"
+configure_args="--prefix=/usr --enable-editline -O3 -flto"

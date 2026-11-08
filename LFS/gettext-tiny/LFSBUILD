@@ -1,0 +1,13 @@
+pkgname=gettext-tiny
+pkgver=0.3.3
+pkgrel=0
+pkgdesc="stub and/or lightweight replacements of the gnu gettext suite"
+pkgurl="http://ftp.barfooze.de/pub/sabotage/tarballs/gettext-tiny-${pkgver}.tar.xz"
+
+arch=all
+license=MIT
+maintainer=littlefly365
+
+configure_style="gmake"
+build_args="LIBINTL=MUSL"
+install_args="LIBINTL=MUSL prefix=/usr"

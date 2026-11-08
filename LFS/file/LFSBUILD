@@ -1,0 +1,12 @@
+pkgname=file
+pkgver=5.3.8
+pkgrel=0
+pkgdesc="A utility to determine file types by examining file contents"
+pkgurl="https://astron.com/pub/file/file-${pkgver}.tar.gz"
+
+arch=all
+license=BSD-2-Clause
+maintainer=littlefly365
+
+configure_style="gnu_configure"
+configure_args="--prefix=/usr"

@@ -2,7 +2,7 @@ pkgname=openrc
 pkgver=0.64.1
 pkgrel=0
 pkgdesc="A dependency-based init system for Linux"
-pkgurl="https://github.com/OpenRC/openrc/archive/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+pkgurl="https://github.com/OpenRC/openrc/archive/${pkgver}/openrc-${pkgver}.tar.gz"
 
 arch=all
 license=BSD-2-Clause

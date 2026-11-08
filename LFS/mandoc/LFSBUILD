@@ -1,0 +1,22 @@
+pkgname=mandoc
+pkgver=1.14.6
+pkgrel=0
+pkgdesc="UNIX manpage compiler toolset"
+pkgurl="https://mandoc.bsd.lv/snapshots/mandoc-${pkgver}.tar.gz"
+
+pages_ver=6.19
+pages_url="https://www.kernel.org/pub/linux/docs/man-pages/man-pages-${pages_ver}.tar.xz"
+
+arch=all
+license=ISC
+maintainer=littlefly365
+
+configure_style="gnu_configure"
+configure_args="--prefix=/usr"
+
+prepare()
+{
+	$download_command "${pages_url}" && cd tar -xf "man-pages-${pages_ver}.tar.xz" && \
+	cd "man-pages-${pages_ver}" && rm man3/crypt* && make -R GIT=false --prefix=/usr install && \
+	cd "${OLDPWD}"
+}

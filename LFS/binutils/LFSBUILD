@@ -1,0 +1,25 @@
+pkgname=binutils
+pkgver=2.47
+pkgrel=0
+pkgdesc="A collection of binary tools for handling object files, archives, and executable binaries"
+pkgurl="https://sourceware.org/pub/binutils/releases/binutils-${pkgver}.tar.xz"
+
+arch=all
+license=GPL-3-or-later
+maintainer=littlefly365
+
+configure_style="gnu_configure"
+configure_args="--prefix=/usr --sysconfdir=/etc --enable-ld=default --disable-shared \
+                --disable-werror --enable-64-bit-bfd --enable-new-dtags --with-system-zlib \
+                --with-lib-path=/usr/lib --enable-default-hash-style-gnu --enable-plugins"
+install_args="DESTDIR=${CWD}/dest"
+
+post_install()
+{
+	for i in ld as; do
+		install -Dm 755 "${CWD}/dest/usr/bin/${i}" "/usr/bin/${i}"
+		install -Dm 644 "${CWD}/dest/usr/share/man/man1/${i}.1" "/usr/share/man/man1/${i}.1"
+	done
+
+	install -Dm 755 "${CWD}/dest/usr/bin/ld.bfd" "/usr/bin/ld.bfd"
+}

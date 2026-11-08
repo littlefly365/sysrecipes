@@ -1,0 +1,13 @@
+pkgname=libedit
+pkgver=20260512-3.1
+pkgrel=0
+pkgdesc="BSD line editing library"
+pkgurl="https://thrysoee.dk/editline/libedit-${pkgver}.tar.gz"
+
+arch=all
+license=BSD-3-Clause
+maintainer=littlefly365
+
+configure_style="gnu_configure"
+configure_args="--prefix=/usr --sysconfdir=/etc --localstatedir=/var --mandir=/usr/share/man \
+                --infodir=/usr/share/info --host=${CHOST} --build=${CBUILD}"

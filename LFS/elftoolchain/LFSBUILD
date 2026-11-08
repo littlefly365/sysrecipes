@@ -1,12 +1,17 @@
 pkgname=elftoolchain
-pkgver=7.0.2
+pkgver=0.7.1.1
 pkgrel=0
-pkgdesc="a BSD alternative for binutils"
-pkgurl="https://github.com/littlefly365/elftoolchain/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+pkgdesc="A BSD alternative for binutils and libelf"
+pkgurl="https://github.com/littlefly365/elftoolchain/archive/refs/tags/${pkgver}.tar.gz"
 
 arch=all
 license=BSD-2-Clause
 maintainer=littlefly365
 
 configure_style="bmake"
-build_args="WITH_TESTS=no"
+
+post_install()
+{
+	# We don't use the ld from elftoolchain (it's unfinished yet)
+	rm -rf /usr/bin/ld /usr/share/man/man1/ld.1
+}
